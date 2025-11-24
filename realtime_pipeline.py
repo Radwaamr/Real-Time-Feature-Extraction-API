@@ -23,9 +23,12 @@ from contextlib import asynccontextmanager
 
 # ==================== CONFIGURATION ====================
 
+import os
+
 class Config:
-    GEE_PROJECT_ID = 'grad-project-470219'
-    OPENWEATHER_API_KEY = "96e35595ffc622fdda9a5639c39c22b7"
+    GEE_PROJECT_ID = os.environ.get("GEE_PROJECT_ID", "grad-project-470219")
+    OPENWEATHER_API_KEY = os.environ.get("OPENWEATHER_API_KEY", "")
+
 
 # ==================== FASTAPI MODELS ====================
 
@@ -465,15 +468,19 @@ async def health_check():
     }
 
 if __name__ == "__main__":
+    import os
+
+    port = int(os.environ.get("PORT", 8000))  # Render يحدد PORT تلقائي
+
     print("🚀 Starting Real-Time Feature Extraction API...")
-    print("📝 Access the API at: http://localhost:8000")
-    print("📚 API Documentation: http://localhost:8000/docs")
+    print(f"📝 Access the API at: http://localhost:{port}")
+    print(f"📚 API Documentation: http://localhost:{port}/docs")
     print("🎯 ML Engineers Endpoint: POST /extract-ml-features")
     print("⏹️  Press CTRL+C to stop the server")
     
     uvicorn.run(
         app, 
         host="0.0.0.0",  # Allows external connections
-        port=8000,
+        port=port,
         reload=True
     )
